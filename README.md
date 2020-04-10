@@ -26,7 +26,7 @@ To run the experiments, there are three steps:
 
 Step 1: run `pyHVC.py` or `pyHVC_parallel.py` to calculate the hypervolume contributions of the solution sets.
 
-Step 2: run `generateAllResults.m` to calculate the hypervolume contribution approximations with different methods (i.e., the new method, the traditional method and the Monte Carlo method), and store the results as intermediate results.
+Step 2: run `generateAllResults.m` to calculate the hypervolume contribution approximations with the R2-HVC method with different direction vector generation methods (i.e., DAS, MSS-D, UNV, JAS, MSS-U), and store the results as intermediate results in the **Raw_Result/** folder.
 
 Step 3: run `evaluateAllResults.m` to evaluate all the intermediate results and output the final results (i.e., Consistency rate and Correct identification rate).
 
