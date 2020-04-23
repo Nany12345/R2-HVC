@@ -175,104 +175,123 @@
 % save('WV_Data.mat','Data');
 
 %% plot the distribution of Data
-clear;
-Data = load('WV_Data.mat','Data');
-Data = Data.Data;
-obj = [3,5];
+% clear;
+% Data = load('WV_Data.mat','Data');
+% Data = Data.Data;
+% obj = [3,5];
+% wv_method = {'DAS','MSS-D','UNV','JAS','MSS-U'};
+% for objInd = 1:2   
+%     if objInd == 1
+%         num_vec = 91;
+%     else
+%         num_vec = 495;
+%     end
+%     for wv_ind = 1:5
+%         Data_Obj = Data{1,objInd};
+%         % 统计点分布数据
+%         num_interval = 100;
+%         num_dist = zeros(1,num_interval);
+%         file_name = strcat('./Result/evaluate_result_dim_',num2str(obj(objInd)), ...
+%             '_numVec_',num2str(num_vec),'_probtype_linear_triangular', ...
+%             '_numSol_100', ...
+%             '_0_',wv_method{wv_ind},'.mat');
+%         t = load(file_name);
+%         data = t.evaluate_result;
+%         CIR = zeros(1,30);
+%         if ~strcmp(wv_method{wv_ind},'DAS') && ~strcmp(wv_method{wv_ind},'MSS-D')
+%             for i = 1:30
+%                 CIR(1,i) = data(1,2,i);
+%             end
+%             mid_index = find(CIR==median(CIR));
+%             seed_num = mid_index(1);
+%         else
+%             seed_num = 1;
+%         end
+%         Data_seed = Data_Obj(:,:,seed_num,wv_ind);
+%         [N,M] = size(Data_seed);
+%         % 计算曲面距离
+%         Dist = zeros(N,M);
+%         for i = 1:M
+%             S_P = Data_seed;
+%             S_P(:,i) = 0;
+%             S_P = S_P./sqrt(sum(S_P.^2,2));
+%             Dist(:,i) = sqrt(sum((Data_seed-S_P).^2,2));
+%             Dist(:,i) = 2*asin(Dist(:,i)/2);
+%         end
+%         Dist = min(Dist,[],2);
+%         % 制作刻度尺
+%         Interval = linspace(0,1,num_interval+1);
+%         Max_Dist = 1/M;
+%         for i = 2:M
+%             Max_Dist = Max_Dist+(1/sqrt(M-1)-1/sqrt(M))^2;
+%         end
+%         Max_Dist = 2*asin(sqrt(Max_Dist)/2);
+%         Interval = Interval*Max_Dist;
+%         % 统计点落在不同位置的数量
+%         for i = 1:num_interval
+%             for j = 1:N
+%                 if j == N
+%                     if Dist(j) >= Interval(i) && Dist(j) <= Interval(i+1)
+%                         num_dist(1,i) = num_dist(1,i)+1;
+%                     end
+%                 else
+%                     if Dist(j) >= Interval(i) && Dist(j) < Interval(i+1)
+%                         num_dist(1,i) = num_dist(1,i)+1;
+%                     end
+%                 end
+%             end
+%         end
+%         % 画图
+%         file_name = ['./Figure/modified-distance/M',num2str(M),'_', ...
+%             wv_method{wv_ind}];
+%         % 创建figure对象
+%         Fig = figure(...
+%             'Units',           'pixels',...
+%             'Name',            file_name,...
+%             'NumberTitle',     'off',...
+%             'IntegerHandle',   'off', ...
+%             'Position',       [100,100,600,500]);
+%         % 创建axes对象, 设定坐标轴属性
+%         AxesH = axes(...
+%             'Parent',          Fig,...
+%             'Xlim',            [0.005,1.005],...
+%             'Ylim',            [0 inf],...
+%             'XGrid',           'on',...
+%             'YGrid',           'on',...
+%             'Visible',         'on',...
+%             'FontSize',        30,...
+%             'XTick',           0:0.2:1);
+%         AxesH.XLabel.String = 'Distance to Boundary';
+%         AxesH.YLabel.String = 'Number';
+% 
+%         hold on;
+%         x = 0.01:0.01:1;
+%         lw = 6; ms = 25;
+% 
+%         hold on;
+%         bar(x,num_dist);
+% 
+%         % 指定保存路径和格式
+%         saveas(Fig,['./' Fig.Name],'emf');
+%         close all;
+%     end
+% end
+
+%% plot 3-objective DVs distribution
+Data = cell(1,2);
 wv_method = {'DAS','MSS-D','UNV','JAS','MSS-U'};
-for objInd = 1:2   
-    if objInd == 1
-        num_vec = 91;
-    else
-        num_vec = 495;
-    end
-    for wv_ind = 1:5
-        Data_Obj = Data{1,objInd};
-        % 统计点分布数据
-        num_interval = 100;
-        num_dist = zeros(1,num_interval);
-        file_name = strcat('./Result/evaluate_result_dim_',num2str(obj(objInd)), ...
-            '_numVec_',num2str(num_vec),'_probtype_linear_triangular', ...
-            '_numSol_100', ...
-            '_0_',wv_method{wv_ind},'.mat');
-        t = load(file_name);
-        data = t.evaluate_result;
-        CIR = zeros(1,30);
-        if ~strcmp(wv_method{wv_ind},'DAS') && ~strcmp(wv_method{wv_ind},'MSS-D')
-            for i = 1:30
-                CIR(1,i) = data(1,2,i);
-            end
-            mid_index = find(CIR==median(CIR));
-            seed_num = mid_index(1);
-        else
-            seed_num = 1;
-        end
-        Data_seed = Data_Obj(:,:,seed_num,wv_ind);
-        [N,M] = size(Data_seed);
-        % 计算曲面距离
-        Dist = zeros(N,M);
-        for i = 1:M
-            S_P = Data_seed;
-            S_P(:,i) = 0;
-            S_P = S_P./sqrt(sum(S_P.^2,2));
-            Dist(:,i) = sqrt(sum((Data_seed-S_P).^2,2));
-            Dist(:,i) = 2*asin(Dist(:,i)/2);
-        end
-        Dist = min(Dist,[],2);
-        % 制作刻度尺
-        Interval = linspace(0,1,num_interval+1);
-        Max_Dist = 1/M;
-        for i = 2:M
-            Max_Dist = Max_Dist+(1/sqrt(M-1)-1/sqrt(M))^2;
-        end
-        Max_Dist = 2*asin(sqrt(Max_Dist)/2);
-        Interval = Interval*Max_Dist;
-        % 统计点落在不同位置的数量
-        for i = 1:num_interval
-            for j = 1:N
-                if j == N
-                    if Dist(j) >= Interval(i) && Dist(j) <= Interval(i+1)
-                        num_dist(1,i) = num_dist(1,i)+1;
-                    end
-                else
-                    if Dist(j) >= Interval(i) && Dist(j) < Interval(i+1)
-                        num_dist(1,i) = num_dist(1,i)+1;
-                    end
-                end
-            end
-        end
-        % 画图
-        file_name = ['./Figure/modified-distance/M',num2str(M),'_', ...
-            wv_method{wv_ind}];
-        % 创建figure对象
-        Fig = figure(...
-            'Units',           'pixels',...
-            'Name',            file_name,...
-            'NumberTitle',     'off',...
-            'IntegerHandle',   'off', ...
-            'Position',       [100,100,600,500]);
-        % 创建axes对象, 设定坐标轴属性
-        AxesH = axes(...
-            'Parent',          Fig,...
-            'Xlim',            [0.005,1.005],...
-            'Ylim',            [0 inf],...
-            'XGrid',           'on',...
-            'YGrid',           'on',...
-            'Visible',         'on',...
-            'FontSize',        30,...
-            'XTick',           0:0.2:1);
-        AxesH.XLabel.String = 'Distance to Boundary';
-        AxesH.YLabel.String = 'Number';
-
-        hold on;
-        x = 0.01:0.01:1;
-        lw = 6; ms = 25;
-
-        hold on;
-        bar(x,num_dist);
-
-        % 指定保存路径和格式
-        saveas(Fig,['./' Fig.Name],'emf');
-        close all;
-    end
+%Data{1,objInd} = zeros(N,objVal(3,5),30(independent runs),5('DAS','MSS-D','UNV','JAS','MSS-U'));
+data = load('WV_Data.mat');
+data = data.Data;
+data = data{1,1};
+for wv_ind = 1:5
+    data_wv = data(:,:,1,wv_ind);
+    f = figure;
+    scatter3(data_wv(:,1),data_wv(:,2),data_wv(:,3),50,'b','fill');
+    ax = gca;
+    ax.FontSize = 30;
+    view(135,45);
+    saveas(f,['./Figure/DV/',wv_method{wv_ind},'.emf']);
+    close all;
 end
+    
